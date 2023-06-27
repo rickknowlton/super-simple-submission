@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Submit Form Data</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      form {
+        width: 300px;
+      }
+
+      h1 {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <h1>Super Simple Form Submission</h1>
+      <div class="mb-3">
+        <label for="field1" class="form-label">Field 1:</label>
+        <input type="text" class="form-control" id="field1" name="field1" />
+      </div>
+      <div class="mb-3">
+        <label for="field2" class="form-label">Field 2:</label>
+        <input type="text" class="form-control" id="field2" name="field2" />
+      </div>
+      <div class="d-flex justify-content-center">
+        <button id="submit-button" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+
+    <script>
+      const submitButton = document.querySelector("#submit-button");
+      const field1 = document.querySelector("#field1");
+      const field2 = document.querySelector("#field2");
+
+      submitButton.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        let data = {
+          field1: field1.value,
+          field2: field2.value,
+        };
+
+        console.log("Data Submission Sent to Server:", data);
+
+        fetch("http://localhost:3000/submitdata/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const successMessage = data.success_message;
+            const submittedData = data.data_submitted;
+            submitButton.replaceWith(document.createTextNode(successMessage));
+            console.log("Data Submission Confirmation:", submittedData);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+    </script>
+  </body>
+</html>
